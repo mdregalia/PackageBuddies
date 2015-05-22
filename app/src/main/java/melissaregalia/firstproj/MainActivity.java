@@ -1,10 +1,15 @@
 package melissaregalia.firstproj;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.sql.*;
@@ -12,53 +17,33 @@ import java.sql.*;
 
 public class MainActivity extends ActionBarActivity {
 
+    private static final String POSTGRESS_DRIVER = "org.postgresql.Driver";
+
+    Activity mSelf = this;
     TextView resultArea;
+    Button nextActivityButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        resultArea = new TextView(this);
-        resultArea.setText("Please wait.");
-        setContentView(resultArea);
-        new FetchSQL().execute();
-    }
-    private class FetchSQL extends AsyncTask<Void,Void,String> {
-        @Override
-        protected String doInBackground(Void... params) {
-            String retval = "";
-            try {
-                Class.forName("org.postgresql.Driver");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                retval = e.toString();
+        setContentView(R.layout.activity_main);
+        resultArea = (TextView) findViewById(R.id.text_view);
+        nextActivityButton = (Button) findViewById(R.id.next_activity_button);
+        resultArea.setText(getString(R.string.please_wait_message));
+        FetchSQL s = new FetchSQL(resultArea);
+        s.execute("SELECT * from \"dummyTable\" WHERE id=1");
+
+        nextActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mSelf, SecondActivity.class);
+                startActivity(intent);
             }
-            String url = "jdbc:postgresql://ec2-174-129-26-115.compute-1.amazonaws.com:5432/d4hp0ep351mjmr?user=mlcqisdxxxgoct&password=D1Cu5DZU0oi9Vy1L5QjY3WsbHU&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
-            Connection conn;
-            try {
-                DriverManager.setLoginTimeout(5);
-                conn = DriverManager.getConnection(url);
-                Statement st = conn.createStatement();
-                String sql;
-                sql = "SELECT * from \"dummyTable\" WHERE id=1";
-                ResultSet rs = st.executeQuery(sql);
-                while(rs.next()) {
-                    retval = rs.getString("dataVal");
-                    //int temp =
-                    //retval = rs.getInt("dataVal");
-                }
-                rs.close();
-                st.close();
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                retval = e.toString();
-            }
-            return retval;
-        }
-        @Override
-        protected void onPostExecute(String value) {
-            resultArea.setText(value);
-        }
+        });
     }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
