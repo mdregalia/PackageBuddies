@@ -4,6 +4,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import melissaregalia.firstproj.hashingutils.HashingUtils;
 
 
 public class SecondActivity extends ActionBarActivity {
@@ -12,6 +15,12 @@ public class SecondActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, "Hello : " + HashingUtils.hash("hello"), Toast.LENGTH_LONG).show();
     }
 
     @Override
