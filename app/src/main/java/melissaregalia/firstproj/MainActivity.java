@@ -29,9 +29,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         resultArea = (TextView) findViewById(R.id.text_view);
         nextActivityButton = (Button) findViewById(R.id.next_activity_button);
-        resultArea.setText(getString(R.string.please_wait_message));
-        FetchSQL s = new FetchSQL(resultArea);
-        s.execute("SELECT * from \"dummyTable\" WHERE id=1");
+        resultArea.setText("Please Login");//(getString(R.string.please_wait_message));
+        //FetchSQL s = new FetchSQL(resultArea);
+        //s.execute("SELECT * from \"dummyTable\" WHERE id=1");
 
         nextActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
