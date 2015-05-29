@@ -18,9 +18,13 @@ public class FetchSQL extends AsyncTask<String, Void, String> {
 
     TextView resultArea;
     String mQuery;
+    String password;
 
+    //here is the intialization arguments - pass in a textview to initialize it
+    //make this an error slot
     public FetchSQL(TextView textView) {
-        this.resultArea = textView;
+        this.resultArea = textView; //error box
+        //this.mQuery = myString; //password user entered
     }
 
     @Override
@@ -40,9 +44,11 @@ public class FetchSQL extends AsyncTask<String, Void, String> {
             Statement st = conn.createStatement();
             String sql;
             sql = params[0];//"SELECT * from \"dummyTable\" WHERE id=1";
+            password = params[1];
             ResultSet rs = st.executeQuery(sql);
             while(rs.next()) {
-                retval = rs.getString("dataVal");
+                //FOR SOME REASON THIS ADDS SOME WHITESPACE
+                retval = (rs.getString("password")).trim();
                 //int temp =
                 //retval = rs.getInt("dataVal");
             }
@@ -57,6 +63,15 @@ public class FetchSQL extends AsyncTask<String, Void, String> {
     }
     @Override
     protected void onPostExecute(String value) {
-        resultArea.setText(value);
+        //if there is no such id then it is empty
+        if(value == "" ){
+            resultArea.setText("No such id");
+        }
+        else if (!value.equals(password)){ //
+            resultArea.setText("Incorrect Password");
+        }
+        else {
+            resultArea.setText("WORKS");
+        };
     }
 }

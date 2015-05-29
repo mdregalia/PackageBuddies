@@ -17,11 +17,12 @@ public class SecondActivity extends ActionBarActivity {
         setContentView(R.layout.activity_second);
     }
 
-    @Override
+    /*@Override
     protected void onResume() {
         super.onResume();
         Toast.makeText(this, "Hello : " + HashingUtils.hash("hello"), Toast.LENGTH_LONG).show();
-    }
+        //Prints out the hashed version of the name
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

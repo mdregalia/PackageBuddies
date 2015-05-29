@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.EditText;
 
 import java.sql.*;
 
@@ -22,6 +23,8 @@ public class MainActivity extends ActionBarActivity {
     Activity mSelf = this;
     TextView resultArea;
     Button nextActivityButton;
+    EditText loginline;
+    EditText passline;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,15 +32,28 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         resultArea = (TextView) findViewById(R.id.text_view);
         nextActivityButton = (Button) findViewById(R.id.next_activity_button);
+        loginline = (EditText) findViewById(R.id.enter_username);
+        passline = (EditText) findViewById(R.id.enter_password);
         resultArea.setText("Please Login");//(getString(R.string.please_wait_message));
         //FetchSQL s = new FetchSQL(resultArea);
         //s.execute("SELECT * from \"dummyTable\" WHERE id=1");
 
         nextActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mSelf, SecondActivity.class);
-                startActivity(intent);
+            public void onClick(View v) { //if they click on the Login button
+                //check that login isn't void
+                //verify that login is in database
+                FetchSQL s = new FetchSQL(resultArea);
+                String loginname = loginline.getText().toString();
+                String password = passline.getText().toString();
+                if (loginname.equals("")){
+                    return;
+                }
+
+                //resultArea.setText(loginname);
+                s.execute("SELECT * from login_info WHERE username=\'"+loginname+"\'",password);
+                /*Intent intent = new Intent(mSelf, SecondActivity.class);
+                startActivity(intent);*/
             }
         });
     }
