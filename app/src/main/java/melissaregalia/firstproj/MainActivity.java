@@ -81,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
                     return;
                 }
                 //resultArea.setText(loginname);
-                s.execute("SELECT * from login_info WHERE username=\'"+loginname+"\'",password);
+                s.execute("INSERT INTO login_info VALUES (\'"+loginname+"\',\'"+password+"\')",loginname);
                 /*Intent intent = new Intent(mSelf, SecondActivity.class);
                 startActivity(intent);*/
             }
