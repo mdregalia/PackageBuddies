@@ -1,6 +1,7 @@
 package melissaregalia.firstproj;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.sql.Connection;
@@ -19,10 +20,12 @@ public class FetchSQL extends AsyncTask<String, Void, String> {
     TextView resultArea;
     String mQuery;
     String password;
+    //public int success;// = false;
 
     //here is the intialization arguments - pass in a textview to initialize it
     //make this an error slot
     public FetchSQL(TextView textView) {
+        //success = 0;
         this.resultArea = textView; //error box
         //this.mQuery = myString; //password user entered
     }
@@ -64,14 +67,25 @@ public class FetchSQL extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String value) {
         //if there is no such id then it is empty
+        /*
+        //Log.d(FetchSQL.class.getSimpleName(), "got to post execute");
         if(value == "" ){
+            success = -1;
+            //Log.d(FetchSQL.class.getSimpleName(), "just changed success to " + success);
             resultArea.setText("No such id");
         }
         else if (!value.equals(password)){ //
+            success = -1;
+            //Log.d(FetchSQL.class.getSimpleName(), "just changed success to " + success);
             resultArea.setText("Incorrect Password");
         }
         else {
+            //Log.d(FetchSQL.class.getSimpleName(), "login is successful");
+            success = 1;
+            //Log.d(FetchSQL.class.getSimpleName(), "just changed success to " + success);
             resultArea.setText("WORKS");
+            //Log.d(FetchSQL.class.getSimpleName(), "success " + success);
         };
+        */
     }
 }

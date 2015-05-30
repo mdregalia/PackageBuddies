@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.EditText;
 
 import java.sql.*;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -49,6 +51,8 @@ public class MainActivity extends ActionBarActivity {
                 FetchSQL s = new FetchSQL(resultArea);
                 String loginname = loginline.getText().toString();
                 String password = passline.getText().toString();
+                String value = "";
+
                 if (loginname.equals("")){
                     return;
                 }
@@ -57,10 +61,44 @@ public class MainActivity extends ActionBarActivity {
                 }
                 //resultArea.setText(loginname);
                 s.execute("SELECT * from login_info WHERE username=\'"+loginname+"\'",password);
-                /*Intent intent = new Intent(mSelf, SecondActivity.class);
-                startActivity(intent);*/
+                //Log.d(MainActivity.class.getSimpleName(), "success " + s.success);
+
+                try
+                {
+                    value = s.get();
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                } catch (ExecutionException e)
+                {
+                    e.printStackTrace();
+                }
+
+                if(value == "" )
+                {
+                    resultArea.setText("No such id");
+                }
+                else if (!value.equals(password))
+                {
+                    resultArea.setText("Incorrect Password");
+                }
+                else
+                {
+                    resultArea.setText("WORKS");
+                    Intent intent = new Intent(mSelf, HomeScreen.class);
+                    startActivity(intent);
+                };
+
+                /*
+                if(s.success == 1)
+                {
+                    Intent intent = new Intent(mSelf, HomeScreen.class);
+                    startActivity(intent);
+                }
+                */
             }
         });
+
 
         //When the new user button is clicked it does something
         makeUserButton.setOnClickListener(new View.OnClickListener() {
