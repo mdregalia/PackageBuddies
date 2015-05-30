@@ -1,19 +1,18 @@
-package melissaregalia.firstproj;
 
+/**
+ * Created by melissaregalia on 5/30/15.
+ */
+
+package melissaregalia.firstproj;
 import android.os.AsyncTask;
 import android.widget.TextView;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Created by melissaregalia on 5/22/15.
- */
-public class FetchSQL extends AsyncTask<String, Void, String> {
-
+public class NewUserSQL extends AsyncTask<String, Void, String> {
     private static final String POSTGRESS_DRIVER = "org.postgresql.Driver";
 
     TextView resultArea;
@@ -22,7 +21,7 @@ public class FetchSQL extends AsyncTask<String, Void, String> {
 
     //here is the intialization arguments - pass in a textview to initialize it
     //make this an error slot
-    public FetchSQL(TextView textView) {
+    public NewUserSQL(TextView textView) {
         this.resultArea = textView; //error box
         //this.mQuery = myString; //password user entered
     }
@@ -75,3 +74,4 @@ public class FetchSQL extends AsyncTask<String, Void, String> {
         };
     }
 }
+

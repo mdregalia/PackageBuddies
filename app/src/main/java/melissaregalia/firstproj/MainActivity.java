@@ -23,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
     Activity mSelf = this;
     TextView resultArea;
     Button nextActivityButton;
+    Button makeUserButton;
     EditText loginline;
     EditText passline;
 
@@ -32,12 +33,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         resultArea = (TextView) findViewById(R.id.text_view);
         nextActivityButton = (Button) findViewById(R.id.next_activity_button);
+        makeUserButton = (Button) findViewById(R.id.make_new_user_button);
         loginline = (EditText) findViewById(R.id.enter_username);
         passline = (EditText) findViewById(R.id.enter_password);
         resultArea.setText("Please Login");//(getString(R.string.please_wait_message));
         //FetchSQL s = new FetchSQL(resultArea);
         //s.execute("SELECT * from \"dummyTable\" WHERE id=1");
 
+        //When the LOGIN button is clicked it now does something
         nextActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //if they click on the Login button
@@ -49,7 +52,34 @@ public class MainActivity extends ActionBarActivity {
                 if (loginname.equals("")){
                     return;
                 }
+                if (password.equals("")){
+                    return;
+                }
+                //resultArea.setText(loginname);
+                s.execute("SELECT * from login_info WHERE username=\'"+loginname+"\'",password);
+                /*Intent intent = new Intent(mSelf, SecondActivity.class);
+                startActivity(intent);*/
+            }
+        });
 
+        //When the new user button is clicked it does something
+        makeUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { //if they click on the Login button
+                //check that login isn't void
+                //verify that login is in database
+                NewUserSQL s = new NewUserSQL(resultArea);
+                String loginname = loginline.getText().toString();
+                String password = passline.getText().toString();
+                if (loginname.equals("")){
+                    return;
+                }
+                if (loginname.equals("")){
+                    return;
+                }
+                if (password.equals("")){
+                    return;
+                }
                 //resultArea.setText(loginname);
                 s.execute("SELECT * from login_info WHERE username=\'"+loginname+"\'",password);
                 /*Intent intent = new Intent(mSelf, SecondActivity.class);
