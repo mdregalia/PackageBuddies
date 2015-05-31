@@ -8,10 +8,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -20,6 +24,8 @@ public class FriendScreen extends ActionBarActivity {
     TextView resultArea;
     Activity mSelf = this;
     Button addFriendButton;
+    ListView friendList;
+    ArrayAdapter<String> listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,6 +35,10 @@ public class FriendScreen extends ActionBarActivity {
 
         resultArea = (TextView) findViewById(R.id.friendTextView);
         addFriendButton = (Button) findViewById(R.id.addFriendButton);
+        friendList = (ListView) findViewById(R.id.friendList);
+
+
+        // FRIEND BUTTON:
 
         addFriendButton.setOnClickListener(new View.OnClickListener()
         {
@@ -200,6 +210,29 @@ public class FriendScreen extends ActionBarActivity {
                 });
             }
         });
+
+
+        // FRIEND LIST:
+
+        GetUserListSQL l = new GetUserListSQL();
+        List<String> list = new ArrayList<String>();
+
+        l.execute("SELECT user2 FROM friends WHERE user1=\'" + MainActivity.currentUser + "\'");
+
+        try
+        {
+            list = l.get();
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        } catch (ExecutionException e)
+        {
+            e.printStackTrace();
+        }
+
+        listAdapter = new ArrayAdapter<String>(this,R.layout.simplerow,list);
+
+        friendList.setAdapter(listAdapter);
     }
 
 
