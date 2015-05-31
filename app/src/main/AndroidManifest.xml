@@ -30,6 +30,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="melissaregalia.firstproj.MainActivity" />
         </activity>
+        <activity
+            android:name=".FriendScreen"
+            android:label="@string/title_activity_friend_screen"
+            android:parentActivityName=".HomeScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="melissaregalia.firstproj.HomeScreen" />
+        </activity>
     </application>
 
 </manifest>

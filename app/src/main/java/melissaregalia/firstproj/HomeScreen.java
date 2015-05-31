@@ -1,29 +1,43 @@
 package melissaregalia.firstproj;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 
 public class HomeScreen extends ActionBarActivity {
 
-    //Activity mSelf = this;
-    //TextView resultArea;
+    Activity mSelf = this;
+    TextView resultArea;
     Button packagesButton;
     Button friendsButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        //resultArea = (TextView) findViewById(R.id.homeTextView);
+        resultArea = (TextView) findViewById(R.id.homeTextView);
         friendsButton = (Button) findViewById(R.id.friendsButton);
         packagesButton = (Button) findViewById(R.id.packagesButton);
-        //resultArea.setText("Home");
+        resultArea.setText("Home");
+
+        friendsButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(mSelf, FriendScreen.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -22,6 +22,8 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String POSTGRESS_DRIVER = "org.postgresql.Driver";
 
+    public static String currentUser = "";
+
     Activity mSelf = this;
     TextView resultArea;
     Button nextActivityButton;
@@ -74,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
 
-                if(value == "" )
+                if(value.equals(""))
                 {
                     resultArea.setText("No such id");
                 }
@@ -85,6 +87,7 @@ public class MainActivity extends ActionBarActivity {
                 else
                 {
                     resultArea.setText("WORKS");
+                    currentUser = loginname;
                     Intent intent = new Intent(mSelf, HomeScreen.class);
                     startActivity(intent);
                 };
