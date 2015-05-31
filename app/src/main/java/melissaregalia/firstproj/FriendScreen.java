@@ -150,13 +150,13 @@ public class FriendScreen extends ActionBarActivity {
                                         // this means the person requested someone who already requested them
                                         //dialog.setMessage("You and user \'" + user + "\' are now friends!");
                                         // need to remove the pending friendship from pending_friends
-                                        s = new GetUserSQL();
-                                        s.execute("DELETE FROM pending_friends WHERE (responder=\'" + MainActivity.currentUser + "\' AND asker=\'" + user + "\')");
+                                        AddFriendSQL a = new AddFriendSQL();
+                                        a.execute("DELETE FROM pending_friends WHERE (responder=\'" + MainActivity.currentUser + "\' AND asker=\'" + user + "\')");
                                         // need to add the friendship both ways to friends
-                                        s = new GetUserSQL();
-                                        s.execute("INSERT INTO friends VALUES (\'" + MainActivity.currentUser + "\',\'" + user + "\')");
-                                        s = new GetUserSQL();
-                                        s.execute("INSERT INTO friends VALUES (\'" + user + "\',\'" + MainActivity.currentUser + "\')");
+                                        a = new AddFriendSQL();
+                                        a.execute("INSERT INTO friends VALUES (\'" + MainActivity.currentUser + "\',\'" + user + "\')");
+                                        a = new AddFriendSQL();
+                                        a.execute("INSERT INTO friends VALUES (\'" + user + "\',\'" + MainActivity.currentUser + "\')");
 
                                         dialog.dismiss();
 
@@ -176,8 +176,8 @@ public class FriendScreen extends ActionBarActivity {
                                     {
                                         // need to add the pending friendship here
                                         //dialog.setMessage("You have successfully sent a friend request to user \'" + user + "\'.");
-                                        s = new GetUserSQL();
-                                        s.execute("INSERT INTO pending_friends VALUES (\'" + MainActivity.currentUser + "\',\'" + user + "\')");
+                                        AddFriendSQL a = new AddFriendSQL();
+                                        a.execute("INSERT INTO pending_friends VALUES (\'" + MainActivity.currentUser + "\',\'" + user + "\')");
 
                                         dialog.dismiss();
 

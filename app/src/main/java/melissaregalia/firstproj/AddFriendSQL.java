@@ -41,17 +41,10 @@ public class AddFriendSQL extends AsyncTask<String, Void, String>
             conn = DriverManager.getConnection(url);
             Statement st = conn.createStatement();
             String sql;
-            sql = params[0]; //string for getting user
-            ResultSet rs = st.executeQuery(sql);
+            sql = params[0]; //string for updating table
+            st.executeUpdate(sql);
 
-            String user = "";
-            while (rs.next())
-            {
-                user = (rs.getString(0)).trim();
-            }
-            rs.close();
-
-            retval = user;
+            retval = "success";
 
             st.close();
             conn.close();
