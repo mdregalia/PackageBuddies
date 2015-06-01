@@ -84,7 +84,7 @@ public class NewUserSQL extends AsyncTask<String, Void, String> {
     }
     @Override
     protected void onPostExecute(String value) {
-        resultArea.setText(value);
+        //resultArea.setText(value);
     }
 }
 

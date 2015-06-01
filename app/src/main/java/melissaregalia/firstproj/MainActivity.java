@@ -78,7 +78,7 @@ public class MainActivity extends ActionBarActivity {
 
                 if(value.equals(""))
                 {
-                    resultArea.setText("No such id");
+                    resultArea.setText("Username does not exist");
                 }
                 else if (!value.equals(password))
                 {
@@ -86,7 +86,7 @@ public class MainActivity extends ActionBarActivity {
                 }
                 else
                 {
-                    resultArea.setText("WORKS");
+                    resultArea.setText("Login Successful");
                     currentUser = loginname;
                     Intent intent = new Intent(mSelf, HomeScreen.class);
                     startActivity(intent);
@@ -112,9 +112,7 @@ public class MainActivity extends ActionBarActivity {
                 NewUserSQL s = new NewUserSQL(resultArea);
                 String loginname = loginline.getText().toString();
                 String password = passline.getText().toString();
-                if (loginname.equals("")){
-                    return;
-                }
+                String value = "";
                 if (loginname.equals("")){
                     return;
                 }
@@ -123,6 +121,33 @@ public class MainActivity extends ActionBarActivity {
                 }
                 //resultArea.setText(loginname);
                 s.execute("INSERT INTO login_info VALUES (\'"+loginname+"\',\'"+password+"\')",loginname);
+
+                try
+                {
+                    value = s.get();
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                } catch (ExecutionException e)
+                {
+                    e.printStackTrace();
+                }
+
+                if(value.equals("exists"))
+                {
+                    resultArea.setText("Username already exists");
+                }
+                else if (value.equals("failed to add"))
+                {
+                    resultArea.setText("Re-try");
+                }
+                else
+                {
+                    resultArea.setText("Account created!");
+                    currentUser = loginname;
+                    Intent intent = new Intent(mSelf, HomeScreen.class);
+                    startActivity(intent);
+                };
                 /*Intent intent = new Intent(mSelf, SecondActivity.class);
                 startActivity(intent);*/
             }
