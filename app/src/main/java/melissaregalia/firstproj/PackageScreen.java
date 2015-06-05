@@ -1,6 +1,7 @@
 package melissaregalia.firstproj;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -42,7 +43,8 @@ public class PackageScreen extends ActionBarActivity
             @Override
             public void onClick(View v)
             {
-
+                Intent intent = new Intent(mSelf, AddPackage.class);
+                startActivity(intent);
             }
         });
 

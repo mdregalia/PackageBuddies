@@ -40,7 +40,12 @@
         </activity>
         <activity
             android:name=".PackageScreen"
-            android:label="@string/title_activity_package_screen" >
+            android:label="Packages" >
+        </activity>
+        <activity
+            android:name=".AddPackage"
+            android:label="Add a Package"
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 
