@@ -29,6 +29,16 @@ public class HomeScreen extends ActionBarActivity {
         packagesButton = (Button) findViewById(R.id.packagesButton);
         resultArea.setText("Home");
 
+        packagesButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(mSelf, PackageScreen.class);
+                startActivity(intent);
+            }
+        });
+
         friendsButton.setOnClickListener(new View.OnClickListener()
         {
             @Override

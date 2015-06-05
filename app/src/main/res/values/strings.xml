@@ -7,4 +7,5 @@
     <string name="title_activity_second">Login</string>
     <string name="title_activity_home_screen">Home</string>
     <string name="title_activity_friend_screen">Friends</string>
+    <string name="title_activity_package_screen">PackageScreen</string>
 </resources>
