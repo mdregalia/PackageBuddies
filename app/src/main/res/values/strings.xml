@@ -9,4 +9,5 @@
     <string name="title_activity_friend_screen">Friends</string>
     <string name="title_activity_package_screen">PackageScreen</string>
     <string name="title_activity_add_package">AddPackage</string>
+    <string name="title_activity_package_view">PackageView</string>
 </resources>

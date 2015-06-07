@@ -45,7 +45,11 @@
         <activity
             android:name=".AddPackage"
             android:label="Add a Package"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name=".PackageView"
+            android:label="@string/title_activity_package_view" >
         </activity>
     </application>
 

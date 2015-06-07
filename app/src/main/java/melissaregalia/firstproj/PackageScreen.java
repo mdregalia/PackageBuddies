@@ -11,6 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
+import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +108,44 @@ public class PackageScreen extends ActionBarActivity
         }
 
         packageList.setAdapter(listAdapter);
+
+        packageList.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String value = packageList.getItemAtPosition(position).toString();
+
+                //sql query to get info about package and see if intermed or not
+                PackageInfoSQL squery = new PackageInfoSQL();
+
+                squery.execute("SELECT * FROM packages WHERE name=\'"+value+"\'");
+                String intermed = "";
+                List<String> packagedetails = new ArrayList<String>();
+                try
+                {
+                    packagedetails = squery.get();
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                } catch (ExecutionException e)
+                {
+                    e.printStackTrace();
+                }
+
+                intermed = packagedetails.get(1);
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, intermed, duration);
+                toast.show();
+
+                if (intermed.equals("")) {
+                    Intent intent = new Intent(mSelf, PackageView.class);
+                    intent.putExtra("package name", value);
+                    startActivity(intent);
+                }
+
+            }
+        });
     }
 
     @Override
