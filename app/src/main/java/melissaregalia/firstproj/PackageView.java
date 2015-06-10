@@ -69,7 +69,7 @@ public class PackageView extends ActionBarActivity {
         final String weight = extras.getString("weight");
         final String type = extras.getString("type");
         final String reciever = extras.getString("recipient");
-        String loc = extras.getString("location");
+        final String loc = extras.getString("location");
         packageNameText.setText("Package: "+pname);
         weightText.setText("Weight: " + weight);
         locText.setText("Location: "+loc);
@@ -331,7 +331,7 @@ public class PackageView extends ActionBarActivity {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
                     {
                         final String place = updateSpinner.getItemAtPosition(position).toString();
-                        if(!place.equals("None"))
+                        if(!place.equals("None") && !place.equals(loc))
                         {
                             AlertDialog.Builder dialog = new AlertDialog.Builder(mSelf);
                             //alert.setTitle("Title");
@@ -352,6 +352,8 @@ public class PackageView extends ActionBarActivity {
                                         else
                                             a.execute("UPDATE packages SET rec_location = \'" + place + "\' WHERE name = \'" + pname + "\'");
                                     }
+
+                                    locText.setText("Location: " + place);
 
                                     update.setEnabled(true);
                                     deleteB.setEnabled(true);
