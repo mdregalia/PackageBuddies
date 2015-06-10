@@ -1,24 +1,36 @@
 package melissaregalia.firstproj;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
 public class Locations extends ActionBarActivity {
 
+    Activity mSelf = this;
     Button addlocationButton;
+    Button locDeleteButton;
     //TextView resultArea;
     EditText locline;
+    Spinner locSpinner;
+
+    ArrayAdapter<String> locListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +38,10 @@ public class Locations extends ActionBarActivity {
         setContentView(R.layout.activity_locations);
 
         addlocationButton = (Button) findViewById(R.id.button3);
+        locDeleteButton = (Button) findViewById(R.id.button4);
         //resultArea = (TextView) findViewById(R.id.textView2);
         locline = (EditText) findViewById(R.id.editText);
+        locSpinner = (Spinner) findViewById(R.id.spinner);
 
         addlocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +97,109 @@ public class Locations extends ActionBarActivity {
                 toast.show();
 
                 locline.setText("");
+
+                List<String> locList = new ArrayList<String>();
+                GetUserListSQL l = new GetUserListSQL();
+                l.execute("SELECT location FROM location_info WHERE username=\'" + MainActivity.currentUser + "\'");
+
+                locList.add("None");
+
+                try
+                {
+                    locList.addAll(l.get());
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                } catch (ExecutionException e)
+                {
+                    e.printStackTrace();
+                }
+
+                locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locList);
+                locSpinner.setAdapter(locListAdapter);
+            }
+        });
+
+        List<String> locList = new ArrayList<String>();
+        GetUserListSQL l = new GetUserListSQL();
+        l.execute("SELECT location FROM location_info WHERE username=\'" + MainActivity.currentUser + "\'");
+
+        locList.add("None");
+
+        try
+        {
+            locList.addAll(l.get());
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        } catch (ExecutionException e)
+        {
+            e.printStackTrace();
+        }
+
+        locListAdapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,locList);
+        locSpinner.setAdapter(locListAdapter);
+
+        locDeleteButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                final String toDelete = locSpinner.getSelectedItem().toString();
+                if(toDelete.equals("None"))
+                {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mSelf);
+                    //alert.setTitle("Title");
+                    dialog.setTitle("Please select a location to delete.");
+
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    });
+
+                    dialog.show();
+                }
+                else
+                {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mSelf);
+                    //alert.setTitle("Title");
+                    dialog.setMessage("Are you sure you would like to delete \'" + toDelete + "\' from your list of preferred locations?");
+
+                    dialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            AddFriendSQL s = new AddFriendSQL();
+                            s.execute("DELETE FROM location_info WHERE username = \'" + MainActivity.currentUser + "\' AND location = \'" + toDelete + "\'");
+
+                            List<String> locList2 = new ArrayList<String>();
+                            GetUserListSQL l2 = new GetUserListSQL();
+                            l2.execute("SELECT location FROM location_info WHERE username=\'" + MainActivity.currentUser + "\'");
+
+                            locList2.add("None");
+
+                            try
+                            {
+                                locList2.addAll(l2.get());
+                            } catch (InterruptedException e)
+                            {
+                                e.printStackTrace();
+                            } catch (ExecutionException e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                            locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locList2);
+                            locSpinner.setAdapter(locListAdapter);
+                        }
+                    });
+                    dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    });
+
+                    dialog.show();
+                }
             }
         });
 
