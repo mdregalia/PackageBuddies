@@ -8,6 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.Toast;
+import android.content.Context;
+
+import java.util.concurrent.ExecutionException;
 
 
 public class PackageView extends ActionBarActivity {
@@ -17,6 +21,7 @@ public class PackageView extends ActionBarActivity {
     TextView weightText;
     TextView recText;
     Button deleteB;
+    Button confirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class PackageView extends ActionBarActivity {
         weightText = (TextView) findViewById(R.id.pv_weight);
         recText = (TextView) findViewById(R.id.pv_reciever);
         deleteB = (Button) findViewById(R.id.button2);
+        confirm = (Button) findViewById(R.id.button);
 
 
         /* DO NOT UNCOMMENT
@@ -40,13 +46,13 @@ public class PackageView extends ActionBarActivity {
         intent.putExtra("type","1"); //1 means intermediate
         intent.putExtra("status",status);*/
 
-        String sender = extras.getString("sender");
+        final String sender = extras.getString("sender");
         final String pname = extras.getString("packagename");
         String weight = extras.getString("weight");
-        String type = extras.getString("type");
+        final String type = extras.getString("type");
         String reciever = extras.getString("recipient");
         packageNameText.setText("Package: "+pname);
-        weightText.setText("Weight: "+weight);
+        weightText.setText("Weight: " + weight);
 
         if (type.equals("0")) { //no intermediary
             senderText.setText("Sender: " + sender);
@@ -73,6 +79,73 @@ public class PackageView extends ActionBarActivity {
                 sql.execute("DELETE from packages where name=\'"+pname+"\'");
                 finish();
             }
+        });
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddFriendSQL update = new AddFriendSQL();
+                GetUserSQL check = new GetUserSQL();
+
+                if (type.equals("0")) { //No intermediary
+                    if (MainActivity.currentUser.equals(sender)) { //user is sender
+                        check.execute("SELECT rconf,dconf FROM packages WHERE name=\'" + pname + "\'");
+
+                        String value = "";
+
+                        try {
+                            value = check.get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+
+                        /*Context context1 = getApplicationContext();
+                        int duration1 = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context1,value, duration1);
+                        toast.show();*/
+
+                        if (value.equals("")) {
+                            update.execute("UPDATE packages SET dconf = '1' where name=\'" + pname + "\'");
+                        } else {
+                            update.execute("DELETE from packages where name=\'" + pname + "\'");
+                            finish();
+                        }
+                    }
+                    else { //where user is recipient
+                            check.execute("SELECT dconf,rconf FROM packages WHERE name=\'" + pname + "\'");
+
+                            String value = "";
+
+                            try {
+                                value = check.get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+
+                        /*Context context1 = getApplicationContext();
+                        int duration1 = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context1,value, duration1);
+                        toast.show();*/
+
+                            if (value.equals("")) {
+                                update.execute("UPDATE packages SET rconf = '1' where name=\'" + pname + "\'");
+                            } else {
+                                update.execute("DELETE from packages where name=\'" + pname + "\'");
+                                finish();
+                            }
+                    }
+                }
+
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, "Delivery Confirmed!", duration);
+                toast.show();
+            }
+
         });
 
 
