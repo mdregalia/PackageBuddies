@@ -26,7 +26,7 @@ public class AddPackage extends ActionBarActivity
 {
 
     Activity mSelf = this;
-    TextView intLocation;
+    TextView intText, intLocationText;
     EditText editName, editWeight;
     Spinner recipientSpinner, locationSpinner, intermediarySpinner, intLocationSpinner;
     Button addPackageButton;
@@ -39,7 +39,8 @@ public class AddPackage extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_package);
 
-        intLocation = (TextView) findViewById(R.id.packageIntLocation);
+        intText = (TextView) findViewById(R.id.packageIntermediary);
+        intLocationText = (TextView) findViewById(R.id.packageIntLocation);
         editName = (EditText) findViewById(R.id.packageNameText);
         editWeight = (EditText) findViewById(R.id.packageWeightText);
         recipientSpinner = (Spinner) findViewById(R.id.recipientSpinner);
@@ -81,9 +82,11 @@ public class AddPackage extends ActionBarActivity
         intLocListAdapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,intLocations);
         intLocationSpinner.setAdapter(intLocListAdapter);
 
-        addPackageButton.setOnClickListener(new View.OnClickListener() {
+        addPackageButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 String nameStr = editName.getText().toString();
                 //Log.d(MainActivity.class.getSimpleName(), "package name is " + nameStr);
                 String weightStr = editWeight.getText().toString();
@@ -96,15 +99,19 @@ public class AddPackage extends ActionBarActivity
 
                 GetUserSQL s = new GetUserSQL();
                 s.execute("SELECT name FROM packages WHERE name = \'" + nameStr + "\'");
-                try {
+                try
+                {
                     existingStr = s.get();
-                } catch (InterruptedException e) {
+                } catch (InterruptedException e)
+                {
                     e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (ExecutionException e)
+                {
                     e.printStackTrace();
                 }
 
-                if (nameStr.equals("") || weightStr.equals("") || recipientStr.equals("None") || loc1Str.equals("None")) {
+                if (nameStr.equals("") || weightStr.equals("") || recipientStr.equals("None") || loc1Str.equals("None") || (!intermediaryStr.equals("None") && loc2Str.equals("None")))
+                {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mSelf);
                     //alert.setTitle("Title");
                     dialog.setTitle("Please enter all of the required information.");
@@ -116,7 +123,9 @@ public class AddPackage extends ActionBarActivity
                     });
 
                     dialog.show();
-                } else if (recipientStr.equals(intermediaryStr)) {
+                }
+                else if (recipientStr.equals(intermediaryStr))
+                {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mSelf);
                     //alert.setTitle("Title");
                     dialog.setTitle("Recipient and intermediary cannot be the same.");
@@ -128,7 +137,23 @@ public class AddPackage extends ActionBarActivity
                     });
 
                     dialog.show();
-                } else if (nameStr.equals(existingStr)) {
+                }
+                else if(loc1Str.equals(loc2Str))
+                {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mSelf);
+                    //alert.setTitle("Title");
+                    dialog.setTitle("Delivery and intermediate locations cannot be the same.");
+
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    });
+
+                    dialog.show();
+                }
+                else if (nameStr.equals(existingStr))
+                {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mSelf);
                     //alert.setTitle("Title");
                     dialog.setTitle("This package name already exists.");
@@ -140,7 +165,9 @@ public class AddPackage extends ActionBarActivity
                     });
 
                     dialog.show();
-                } else {
+                }
+                else
+                {
                     if (intermediaryStr.equals("None"))
                         intermediaryStr = "";
                     if (loc2Str.equals("None"))
@@ -232,6 +259,9 @@ public class AddPackage extends ActionBarActivity
                 String rec = recipientSpinner.getSelectedItem().toString();
                 if(!interm.equals("None")) // intermediary is selected
                 {
+                    intText.setText("Intermediary *");
+                    intLocationText.setText("Intermediate Location *");
+
                     // need to set intermediary spinner to have intermediary union currentuser
                     intLocations = new ArrayList<String>();
                     intLocations.add("None");
@@ -273,6 +303,9 @@ public class AddPackage extends ActionBarActivity
                 }
                 else // "None" is selected in intermediary spinner
                 {
+                    intText.setText("Intermediary");
+                    intLocationText.setText("Intermediate Location");
+
                     // need to reset both intermediary and recipient location spinners
                     intLocations = new ArrayList<String>();
                     intLocations.add("None");
@@ -305,6 +338,7 @@ public class AddPackage extends ActionBarActivity
                         locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locations);
                         locationSpinner.setAdapter(locListAdapter);
                     }
+
                 }
 
             }
