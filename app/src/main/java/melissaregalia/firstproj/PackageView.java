@@ -19,6 +19,7 @@ public class PackageView extends ActionBarActivity {
     TextView senderText;
     TextView packageNameText;
     TextView weightText;
+    TextView locText;
     TextView recText;
     Button deleteB;
     Button confirm;
@@ -31,6 +32,7 @@ public class PackageView extends ActionBarActivity {
         final Bundle extras = getIntent().getExtras();
         senderText = (TextView) findViewById(R.id.pv_sender);
         packageNameText = (TextView) findViewById(R.id.pv_packagename);
+        locText = (TextView) findViewById(R.id.textView);
         weightText = (TextView) findViewById(R.id.pv_weight);
         recText = (TextView) findViewById(R.id.pv_reciever);
         deleteB = (Button) findViewById(R.id.button2);
@@ -51,8 +53,10 @@ public class PackageView extends ActionBarActivity {
         final String weight = extras.getString("weight");
         final String type = extras.getString("type");
         final String reciever = extras.getString("recipient");
+        String loc = extras.getString("location");
         packageNameText.setText("Package: "+pname);
         weightText.setText("Weight: " + weight);
+        locText.setText("Location: "+loc);
 
         if (type.equals("0")) { //no intermediary
             senderText.setText("Sender: " + sender);
