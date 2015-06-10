@@ -74,7 +74,7 @@ public class AddPackage extends ActionBarActivity
         intermediarySpinner.setAdapter(friendListAdapter);
 
 
-        locations.add("somelocation"); // DEBUG STATEMENT: delete this later
+        //locations.add("somelocation"); // DEBUG STATEMENT: delete this later
         locListAdapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,locations);
         locationSpinner.setAdapter(locListAdapter);
 
@@ -150,7 +150,7 @@ public class AddPackage extends ActionBarActivity
                     a.execute("INSERT INTO packages(name,weight,sender,recipient,rec_location,intermediary,int_location,status,rconf,dconf)" +
                             "VALUES (\'" + nameStr + "\',\'" + weightStr + "\',\'" + MainActivity.currentUser + "\'," +
                             "\'" + recipientStr + "\',\'" + loc1Str + "\',\'" + intermediaryStr + "\',\'" + loc2Str + "\'," +
-                            "\'" + emptyStr + "\',\'" + emptyStr + "\',\'"+ emptyStr + "\')");
+                            "\'" + emptyStr + "\',\'" + emptyStr + "\',\'" + emptyStr + "\')");
 
                     Intent intent = new Intent(mSelf, PackageScreen.class);
                     startActivity(intent);
@@ -160,14 +160,15 @@ public class AddPackage extends ActionBarActivity
         });
 
 
-        recipientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        recipientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 String rec = recipientSpinner.getItemAtPosition(position).toString();
-                if(!rec.equals("None"))
+                String interm = intermediarySpinner.getSelectedItem().toString();
+                if (!rec.equals("None") && intermediarySpinner.getSelectedItem().toString().equals("None")) // only a recipient is selected
                 {
+                    // need to populate the recipient location spinner only with recipient union currentuser
                     locations = new ArrayList<String>();
                     locations.add("None");
                     GetUserListSQL l = new GetUserListSQL();
@@ -185,6 +186,127 @@ public class AddPackage extends ActionBarActivity
                     locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locations);
                     locationSpinner.setAdapter(locListAdapter);
                 }
+                else if(!rec.equals("None") && !interm.equals("None")) // both a recipient and an intermediary are selected
+                {
+                    // need to populate the recipient location spinner only with recipient union intermediary
+                    locations = new ArrayList<String>();
+                    locations.add("None");
+                    GetUserListSQL l = new GetUserListSQL();
+                    l.execute("SELECT location FROM location_info WHERE username = \'" + rec + "\' UNION SELECT location FROM location_info WHERE username = \'" + interm + "\'");
+                    try
+                    {
+                        locations.addAll(l.get());
+                    } catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    } catch (ExecutionException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locations);
+                    locationSpinner.setAdapter(locListAdapter);
+                }
+                else if(rec.equals("None")) // "None" is selected for recipient
+                {
+                    // need to reset the recipient location spinner
+                    locations = new ArrayList<String>();
+                    locations.add("None");
+                    locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locations);
+                    locationSpinner.setAdapter(locListAdapter);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+                // sometimes you need nothing here
+            }
+        });
+
+        intermediarySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                String interm = intermediarySpinner.getItemAtPosition(position).toString();
+                String rec = recipientSpinner.getSelectedItem().toString();
+                if(!interm.equals("None")) // intermediary is selected
+                {
+                    // need to set intermediary spinner to have intermediary union currentuser
+                    intLocations = new ArrayList<String>();
+                    intLocations.add("None");
+                    GetUserListSQL l = new GetUserListSQL();
+                    l.execute("SELECT location FROM location_info WHERE username = \'" + MainActivity.currentUser + "\' UNION SELECT location FROM location_info WHERE username = \'" + interm + "\'");
+                    try
+                    {
+                        intLocations.addAll(l.get());
+                    } catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    } catch (ExecutionException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    intLocListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, intLocations);
+                    intLocationSpinner.setAdapter(intLocListAdapter);
+
+                    if(!rec.equals("None")) // both an intermediary and a recipient are selected
+                    {
+                        // need to set recipient spinner to have recipient union intermediary
+                        locations = new ArrayList<String>();
+                        locations.add("None");
+                        l = new GetUserListSQL();
+                        l.execute("SELECT location FROM location_info WHERE username = \'" + rec + "\' UNION SELECT location FROM location_info WHERE username = \'" + interm + "\'");
+                        try
+                        {
+                            locations.addAll(l.get());
+                        } catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        } catch (ExecutionException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locations);
+                        locationSpinner.setAdapter(locListAdapter);
+                    }
+                }
+                else // "None" is selected in intermediary spinner
+                {
+                    // need to reset both intermediary and recipient location spinners
+                    intLocations = new ArrayList<String>();
+                    intLocations.add("None");
+                    intLocListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, intLocations);
+                    intLocationSpinner.setAdapter(intLocListAdapter);
+
+                    if(rec.equals("None")) // this one is probably not required
+                    {
+                        locations = new ArrayList<String>();
+                        locations.add("None");
+                        locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locations);
+                        locationSpinner.setAdapter(locListAdapter);
+                    }
+                    else // but this is required: recipient has a value, reset to recipient union currentuser
+                    {
+                        locations = new ArrayList<String>();
+                        locations.add("None");
+                        GetUserListSQL l = new GetUserListSQL();
+                        l.execute("SELECT location FROM location_info WHERE username = \'" + MainActivity.currentUser + "\' UNION SELECT location FROM location_info WHERE username = \'" + rec + "\'");
+                        try
+                        {
+                            locations.addAll(l.get());
+                        } catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        } catch (ExecutionException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        locListAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locations);
+                        locationSpinner.setAdapter(locListAdapter);
+                    }
+                }
+
             }
 
             @Override
