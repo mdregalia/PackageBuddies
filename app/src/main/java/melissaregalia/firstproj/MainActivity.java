@@ -54,8 +54,8 @@ public class MainActivity extends ActionBarActivity {
                 //check that login isn't void
                 //verify that login is in database
                 FetchSQL s = new FetchSQL(resultArea);
-                String loginname = loginline.getText().toString();
-                String password = passline.getText().toString();
+                String loginname = loginline.getText().toString().trim();
+                String password = passline.getText().toString().trim();
                 String value = "";
 
                 if (loginname.equals("")){

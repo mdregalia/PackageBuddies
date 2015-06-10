@@ -52,7 +52,14 @@ public class PackageInfoSQL extends AsyncTask<String, Void, List<String>> {
                 retval.add(rs.getString("intermediary").trim());
                 retval.add(rs.getString("rec_location").trim());
                 retval.add(rs.getString("int_location").trim());
+                retval.add(rs.getString("sender").trim());
+                retval.add(rs.getString("recipient").trim());
                 retval.add(rs.getString("status").trim());
+                //retval.add(rs.getString("intermediary").trim());
+                //retval.add(rs.getString("weight").trim());
+                //retval.add(rs.getString("rec_location").trim());
+                //retval.add(rs.getString("int_location").trim());
+                //retval.add(rs.getString("status").trim());
                 //add others
             }
             rs.close();
