@@ -97,7 +97,7 @@ public class PackageScreen extends ActionBarActivity
                 }
                 else{ //intermediate with package
                     Intent intent = new Intent(mSelf, PackageView.class);
-                    String status = packagedetails.get(4);
+                    String status = packagedetails.get(6);
                     if (status.equals("")){ //then it is first leg
                         intent.putExtra("packagename", value);
                         intent.putExtra("sender",packagedetails.get(4));
