@@ -92,6 +92,7 @@ public class AddPackage extends ActionBarActivity
                 String intermediaryStr = intermediarySpinner.getSelectedItem().toString();
                 String loc2Str = intLocationSpinner.getSelectedItem().toString();
                 String existingStr = "";
+                String emptyStr = "";
 
                 GetUserSQL s = new GetUserSQL();
                 s.execute("SELECT name FROM packages WHERE name = \'" + nameStr + "\'");
@@ -146,9 +147,10 @@ public class AddPackage extends ActionBarActivity
                         loc2Str = "";
 
                     AddFriendSQL a = new AddFriendSQL();
-                    a.execute("INSERT INTO packages(name,weight,sender,recipient,rec_location,intermediary,int_location)" +
+                    a.execute("INSERT INTO packages(name,weight,sender,recipient,rec_location,intermediary,int_location,status,rconf,dconf)" +
                             "VALUES (\'" + nameStr + "\',\'" + weightStr + "\',\'" + MainActivity.currentUser + "\'," +
-                            "\'" + recipientStr + "\',\'" + loc1Str + "\',\'" + intermediaryStr + "\',\'" + loc2Str + "\')");
+                            "\'" + recipientStr + "\',\'" + loc1Str + "\',\'" + intermediaryStr + "\',\'" + loc2Str + "\'," +
+                            "\'" + emptyStr + "\',\'" + emptyStr + "\',\'"+ emptyStr + "\')");
 
                     Intent intent = new Intent(mSelf, PackageScreen.class);
                     startActivity(intent);
