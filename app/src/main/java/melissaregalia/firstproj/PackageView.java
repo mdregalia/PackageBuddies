@@ -31,6 +31,7 @@ public class PackageView extends ActionBarActivity {
     TextView senderText;
     TextView packageNameText;
     TextView weightText;
+    TextView locText;
     TextView recText;
     Button deleteB;
     Button confirm;
@@ -43,9 +44,10 @@ public class PackageView extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package_view);
 
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         senderText = (TextView) findViewById(R.id.pv_sender);
         packageNameText = (TextView) findViewById(R.id.pv_packagename);
+        locText = (TextView) findViewById(R.id.textView);
         weightText = (TextView) findViewById(R.id.pv_weight);
         recText = (TextView) findViewById(R.id.pv_reciever);
         deleteB = (Button) findViewById(R.id.button2);
@@ -64,11 +66,13 @@ public class PackageView extends ActionBarActivity {
 
         final String sender = extras.getString("sender");
         final String pname = extras.getString("packagename");
-        String weight = extras.getString("weight");
+        final String weight = extras.getString("weight");
         final String type = extras.getString("type");
         final String reciever = extras.getString("recipient");
+        String loc = extras.getString("location");
         packageNameText.setText("Package: "+pname);
         weightText.setText("Weight: " + weight);
+        locText.setText("Location: "+loc);
 
         status = "";
 
@@ -155,6 +159,114 @@ public class PackageView extends ActionBarActivity {
                                 update.execute("DELETE from packages where name=\'" + pname + "\'");
                                 finish();
                             }
+                    }
+                }
+
+                else{ //intermediary
+                    String status = extras.getString("status");
+                    if (status.equals("")){
+                        if (MainActivity.currentUser.equals(sender)) { //user is sender
+                            check.execute("SELECT rconf,dconf FROM packages WHERE name=\'" + pname + "\'");
+
+                            String value = "";
+
+                            try {
+                                value = check.get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+
+                        /*Context context1 = getApplicationContext();
+                        int duration1 = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context1,value, duration1);
+                        toast.show();*/
+
+                            if (value.equals("")) {
+                                update.execute("UPDATE packages SET dconf = '1' where name=\'" + pname + "\'");
+                            } else {
+                                update.execute("UPDATE packages set dconf = '', rconf = '', status = '1' where name=\'" + pname + "\'");
+                                finish();
+                            }
+                        }
+                        else if (MainActivity.currentUser.equals(reciever)){ //where user is recipient
+                            check.execute("SELECT dconf,rconf FROM packages WHERE name=\'" + pname + "\'");
+
+                            String value = "";
+
+                            try {
+                                value = check.get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+
+                        /*Context context1 = getApplicationContext();
+                        int duration1 = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context1,value, duration1);
+                        toast.show();*/
+
+                            if (value.equals("")) {
+                                update.execute("UPDATE packages SET rconf = '1' where name=\'" + pname + "\'");
+                            } else {
+                                update.execute("UPDATE packages set dconf = '', rconf = '', status = '1' where name=\'" + pname + "\'");
+                                finish();
+                            }
+                        }
+                    }
+                    else {
+                        if (MainActivity.currentUser.equals(sender)) { //user is sender
+                            check.execute("SELECT rconf,dconf FROM packages WHERE name=\'" + pname + "\'");
+
+                            String value = "";
+
+                            try {
+                                value = check.get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+
+                        /*Context context1 = getApplicationContext();
+                        int duration1 = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context1,value, duration1);
+                        toast.show();*/
+
+                            if (value.equals("")) {
+                                update.execute("UPDATE packages SET dconf = '1' where name=\'" + pname + "\'");
+                            } else {
+                                update.execute("DELETE from packages where name=\'" + pname + "\'");
+                                finish();
+                            }
+                        }
+                        else if (MainActivity.currentUser.equals(reciever)) { //where user is recipient
+                            check.execute("SELECT dconf,rconf FROM packages WHERE name=\'" + pname + "\'");
+
+                            String value = "";
+
+                            try {
+                                value = check.get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+
+                        /*Context context1 = getApplicationContext();
+                        int duration1 = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context1,value, duration1);
+                        toast.show();*/
+
+                            if (value.equals("")) {
+                                update.execute("UPDATE packages SET rconf = '1' where name=\'" + pname + "\'");
+                            } else {
+                                update.execute("DELETE from packages where name=\'" + pname + "\'");
+                                finish();
+                            }
+                        }
                     }
                 }
 
