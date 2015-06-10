@@ -1,15 +1,22 @@
 package melissaregalia.firstproj;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Button;
 
 
 public class PackageView extends ActionBarActivity {
 
     TextView senderText;
+    TextView packageNameText;
+    TextView weightText;
+    TextView recText;
+    Button deleteB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +25,55 @@ public class PackageView extends ActionBarActivity {
 
         Bundle extras = getIntent().getExtras();
         senderText = (TextView) findViewById(R.id.pv_sender);
+        packageNameText = (TextView) findViewById(R.id.pv_packagename);
+        weightText = (TextView) findViewById(R.id.pv_weight);
+        recText = (TextView) findViewById(R.id.pv_reciever);
+        deleteB = (Button) findViewById(R.id.button2);
+
+
+        /* DO NOT UNCOMMENT
+        intent.putExtra("package name", value);
+        intent.putExtra("sender",packagedetails.get(5));
+        intent.putExtra("recipient",intermed);
+        intent.putExtra("location",packagedetails.get(3)); //int location
+        intent.putExtra("weight",packagedetails.get(0));
+        intent.putExtra("type","1"); //1 means intermediate
+        intent.putExtra("status",status);*/
+
         String sender = extras.getString("sender");
-        senderText.setText("Sender: "+sender);
+        final String pname = extras.getString("packagename");
+        String weight = extras.getString("weight");
+        String type = extras.getString("type");
+        String reciever = extras.getString("recipient");
+        packageNameText.setText("Package: "+pname);
+        weightText.setText("Weight: "+weight);
+
+        if (type.equals("0")) { //no intermediary
+            senderText.setText("Sender: " + sender);
+            recText.setText("Recipient: "+reciever);
+        }
+        else{ //intermediary
+            String status = extras.getString("status");
+            if (status.equals("")){ //first leg
+                senderText.setText("Sender: " + sender);
+                recText.setText("Intermediate: "+reciever);
+            }
+            else{ //secondleg
+                senderText.setText("Intermediate: " + sender);
+                recText.setText("Recipient: "+reciever);
+            }
+        }
+
+        deleteB.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                AddFriendSQL sql = new AddFriendSQL();
+                sql.execute("DELETE from packages where name=\'"+pname+"\'");
+                finish();
+            }
+        });
 
 
 
