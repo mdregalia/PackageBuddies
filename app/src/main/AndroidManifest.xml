@@ -51,6 +51,19 @@
             android:name=".PackageView"
             android:label="@string/title_activity_package_view" >
         </activity>
+        <activity
+            android:name=".PackageViewIntermed"
+            android:label="@string/title_activity_package_view_intermed" >
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".Locations"
+            android:label="@string/title_activity_locations" >
+        </activity>
     </application>
 
 </manifest>

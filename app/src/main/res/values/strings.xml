@@ -10,4 +10,6 @@
     <string name="title_activity_package_screen">PackageScreen</string>
     <string name="title_activity_add_package">AddPackage</string>
     <string name="title_activity_package_view">PackageView</string>
+    <string name="title_activity_package_view_intermed">PackageViewIntermed</string>
+    <string name="title_activity_locations">Locations</string>
 </resources>

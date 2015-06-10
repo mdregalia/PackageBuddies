@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import android.widget.Toast;
 
 import java.sql.*;
 import java.util.concurrent.ExecutionException;
@@ -56,6 +59,18 @@ public class MainActivity extends ActionBarActivity {
                 String value = "";
 
                 if (loginname.equals("")){
+                    /*int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+
+                    if (resultCode == ConnectionResult.SUCCESS){
+                        Toast.makeText(getApplicationContext(),
+                                "isGooglePlayServicesAvailable SUCCESS",
+                                Toast.LENGTH_LONG).show();
+                    }else{
+                        GooglePlayServicesUtil.getErrorDialog(resultCode, mSelf, 1);
+                        Toast.makeText(getApplicationContext(),
+                                String.valueOf(resultCode),
+                                Toast.LENGTH_LONG).show();
+                    }*/
                     return;
                 }
                 if (password.equals("")){
@@ -152,6 +167,23 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);*/
             }
         });
+
+        //Context context = getApplicationContext();
+
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+
+        if (resultCode == ConnectionResult.SUCCESS){
+            Toast.makeText(getApplicationContext(),
+                    "isGooglePlayServicesAvailable SUCCESS",
+                    Toast.LENGTH_LONG).show();
+        }else{
+            GooglePlayServicesUtil.getErrorDialog(resultCode, this, 1);
+        }
+
+        /*int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, value, duration);
+        toast.show();*/
     }
 
 

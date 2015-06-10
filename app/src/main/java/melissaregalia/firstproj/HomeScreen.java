@@ -18,6 +18,8 @@ public class HomeScreen extends ActionBarActivity {
     Button packagesButton;
     Button friendsButton;
 
+    Button locationButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -27,13 +29,12 @@ public class HomeScreen extends ActionBarActivity {
         resultArea = (TextView) findViewById(R.id.homeTextView);
         friendsButton = (Button) findViewById(R.id.friendsButton);
         packagesButton = (Button) findViewById(R.id.packagesButton);
+        locationButton = (Button) findViewById(R.id.locationButton);
         resultArea.setText("Home");
 
-        packagesButton.setOnClickListener(new View.OnClickListener()
-        {
+        packagesButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 Intent intent = new Intent(mSelf, PackageScreen.class);
                 startActivity(intent);
             }
@@ -48,6 +49,18 @@ public class HomeScreen extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        locationButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(mSelf, Locations.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override

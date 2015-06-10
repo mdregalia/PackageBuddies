@@ -132,15 +132,22 @@ public class PackageScreen extends ActionBarActivity
                 }
 
                 intermed = packagedetails.get(1);
-                Context context = getApplicationContext();
+                /*Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
 
                 Toast toast = Toast.makeText(context, intermed, duration);
-                toast.show();
+                toast.show();*/
 
-                if (intermed.equals("")) {
+                if (intermed.equals("")) { //aka no intermediate
                     Intent intent = new Intent(mSelf, PackageView.class);
                     intent.putExtra("package name", value);
+                    //add more and get from
+                    startActivity(intent);
+                }
+                else{ //intermediate with package
+                    Intent intent = new Intent(mSelf, PackageViewIntermed.class);
+                    intent.putExtra("package name",value);
+                    //add more here
                     startActivity(intent);
                 }
 
