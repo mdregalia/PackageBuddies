@@ -132,21 +132,52 @@ public class PackageScreen extends ActionBarActivity
                 }
 
                 intermed = packagedetails.get(1);
-                /*Context context = getApplicationContext();
+                Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
 
                 Toast toast = Toast.makeText(context, intermed, duration);
-                toast.show();*/
+                toast.show();
+
+                /*retval.add(rs.getString("weight").trim());
+                retval.add(rs.getString("intermediary").trim());
+                retval.add(rs.getString("rec_location").trim());
+                retval.add(rs.getString("int_location").trim());
+                retval.add(rs.getString("sender").trim());
+                retval.add(rs.getString("recipient").trim());
+                retval.add(rs.getString("status").trim());*/
 
                 if (intermed.equals("")) { //aka no intermediate
                     Intent intent = new Intent(mSelf, PackageView.class);
-                    intent.putExtra("package name", value);
+                    intent.putExtra("packagename", value);
+                    intent.putExtra("sender",packagedetails.get(5));
+                    intent.putExtra("recipient",packagedetails.get(6));
+                    intent.putExtra("location",packagedetails.get(2));
+                    intent.putExtra("weight",packagedetails.get(0));
+                    intent.putExtra("type","0"); //0 means no intermediate
                     //add more and get from
                     startActivity(intent);
                 }
                 else{ //intermediate with package
-                    Intent intent = new Intent(mSelf, PackageViewIntermed.class);
-                    intent.putExtra("package name",value);
+                    Intent intent = new Intent(mSelf, PackageView.class);
+                    String status = packagedetails.get(4);
+                    if (status.equals("")){ //then it is first leg
+                        intent.putExtra("package name", value);
+                        intent.putExtra("sender",packagedetails.get(5));
+                        intent.putExtra("recipient",intermed);
+                        intent.putExtra("location",packagedetails.get(3)); //int location
+                        intent.putExtra("weight",packagedetails.get(0));
+                        intent.putExtra("type","1"); //1 means intermediate
+                        intent.putExtra("status",status);
+                    }
+                    else{ //then it is second leg
+                        intent.putExtra("package name", value);
+                        intent.putExtra("sender",intermed);
+                        intent.putExtra("recipient",packagedetails.get(6));
+                        intent.putExtra("location",packagedetails.get(2)); //rec location
+                        intent.putExtra("weight",packagedetails.get(0));
+                        intent.putExtra("type","1"); //1 means intermediate
+                        intent.putExtra("status",status);
+                    }
                     //add more here
                     startActivity(intent);
                 }
