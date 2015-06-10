@@ -1,27 +1,42 @@
 package melissaregalia.firstproj;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
 public class PackageView extends ActionBarActivity {
 
+    Activity mSelf = this;
     TextView senderText;
     TextView packageNameText;
     TextView weightText;
     TextView recText;
     Button deleteB;
     Button confirm;
+    Button update;
+
+    String status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +50,7 @@ public class PackageView extends ActionBarActivity {
         recText = (TextView) findViewById(R.id.pv_reciever);
         deleteB = (Button) findViewById(R.id.button2);
         confirm = (Button) findViewById(R.id.button);
+        update = (Button) findViewById(R.id.pv_update);
 
 
         /* DO NOT UNCOMMENT
@@ -50,16 +66,18 @@ public class PackageView extends ActionBarActivity {
         final String pname = extras.getString("packagename");
         String weight = extras.getString("weight");
         final String type = extras.getString("type");
-        String reciever = extras.getString("recipient");
+        final String reciever = extras.getString("recipient");
         packageNameText.setText("Package: "+pname);
         weightText.setText("Weight: " + weight);
+
+        status = "";
 
         if (type.equals("0")) { //no intermediary
             senderText.setText("Sender: " + sender);
             recText.setText("Recipient: "+reciever);
         }
         else{ //intermediary
-            String status = extras.getString("status");
+            /*String*/ status = extras.getString("status");
             if (status.equals("")){ //first leg
                 senderText.setText("Sender: " + sender);
                 recText.setText("Intermediate: "+reciever);
@@ -148,7 +166,106 @@ public class PackageView extends ActionBarActivity {
 
         });
 
+        update.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                update.setEnabled(false);
+                deleteB.setEnabled(false);
+                confirm.setEnabled(false);
+                LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = layoutInflater.inflate(R.layout.popup_window, null);
+                final PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
+                List<String> locs = new ArrayList<String>();
+                locs.add("None");
+
+                GetUserListSQL s = new GetUserListSQL();
+                s.execute("SELECT location FROM location_info WHERE username = \'" + sender + "\' UNION SELECT location FROM location_info WHERE username = \'" + reciever + "\'");
+                try
+                {
+                    locs.addAll(s.get());
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                } catch (ExecutionException e)
+                {
+                    e.printStackTrace();
+                }
+
+                final Spinner updateSpinner = (Spinner) popupView.findViewById(R.id.popupspinner);
+                ArrayAdapter<String> updateAdapter = new ArrayAdapter<String>(mSelf, R.layout.support_simple_spinner_dropdown_item, locs);
+                updateSpinner.setAdapter(updateAdapter);
+
+                popupWindow.showAsDropDown(update,300,-1300);
+
+                Button cancel = (Button) popupView.findViewById(R.id.dismiss);
+                cancel.setOnClickListener(new Button.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        update.setEnabled(true);
+                        deleteB.setEnabled(true);
+                        confirm.setEnabled(true);
+                        popupWindow.dismiss();
+                    }
+                });
+
+                updateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                    {
+                        final String place = updateSpinner.getItemAtPosition(position).toString();
+                        if(!place.equals("None"))
+                        {
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(mSelf);
+                            //alert.setTitle("Title");
+                            dialog.setMessage("Are you sure you would like to change the next delivery location to \'" + place + "\'?");
+
+                            dialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int whichButton)
+                                {
+                                    AddFriendSQL a = new AddFriendSQL();
+
+                                    if (type.equals("0")) // no intermediary
+                                        a.execute("UPDATE packages SET rec_location = \'" + place + "\' WHERE name = \'" + pname + "\'");
+                                    else
+                                    {
+                                        if (status.equals("")) // first leg
+                                            a.execute("UPDATE packages SET int_location = \'" + place + "\' WHERE name = \'" + pname + "\'");
+                                        else
+                                            a.execute("UPDATE packages SET rec_location = \'" + place + "\' WHERE name = \'" + pname + "\'");
+                                    }
+
+                                    update.setEnabled(true);
+                                    deleteB.setEnabled(true);
+                                    confirm.setEnabled(true);
+                                    popupWindow.dismiss();
+                                }
+                            });
+                            dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                }
+                            });
+
+                            dialog.show();
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                        // sometimes you need nothing here
+                    }
+                });
+
+            }
+        });
 
     }
 
