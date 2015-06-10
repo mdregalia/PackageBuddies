@@ -1,6 +1,7 @@
 package melissaregalia.firstproj;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -43,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
         makeUserButton = (Button) findViewById(R.id.make_new_user_button);
         loginline = (EditText) findViewById(R.id.enter_username);
         passline = (EditText) findViewById(R.id.enter_password);
-        resultArea.setText("Please Login");//(getString(R.string.please_wait_message));
+        resultArea.setText("");//(getString(R.string.please_wait_message));
         //FetchSQL s = new FetchSQL(resultArea);
         //s.execute("SELECT * from \"dummyTable\" WHERE id=1");
 
@@ -128,10 +129,24 @@ public class MainActivity extends ActionBarActivity {
                 String loginname = loginline.getText().toString();
                 String password = passline.getText().toString();
                 String value = "";
-                if (loginname.equals("")){
+                if (loginname.equals("") || password.equals(""))
+                {
+                    resultArea.setText("Please enter a username and a password.");
                     return;
                 }
-                if (password.equals("")){
+                if(loginname.equals("None"))
+                {
+                    resultArea.setText("\'None\' is not a valid username.");
+                    return;
+                }
+                if(loginname.length() > 20)
+                {
+                    resultArea.setText("Username may not be more than 20 characters long.");
+                    return;
+                }
+                if(password.length() > 20)
+                {
+                    resultArea.setText("Password may not be more than 20 characters long.");
                     return;
                 }
                 //resultArea.setText(loginname);

@@ -30,7 +30,7 @@ public class HomeScreen extends ActionBarActivity {
         friendsButton = (Button) findViewById(R.id.friendsButton);
         packagesButton = (Button) findViewById(R.id.packagesButton);
         locationButton = (Button) findViewById(R.id.locationButton);
-        resultArea.setText("Home");
+        resultArea.setText("");
 
         packagesButton.setOnClickListener(new View.OnClickListener() {
             @Override
