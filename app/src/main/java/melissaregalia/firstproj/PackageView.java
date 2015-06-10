@@ -37,7 +37,7 @@ public class PackageView extends ActionBarActivity {
     Button confirm;
     Button update;
 
-    String status;
+    String status, loc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class PackageView extends ActionBarActivity {
         final String weight = extras.getString("weight");
         final String type = extras.getString("type");
         final String reciever = extras.getString("recipient");
-        final String loc = extras.getString("location");
+        /*String*/ loc = extras.getString("location");
         packageNameText.setText("Package: "+pname);
         weightText.setText("Weight: " + weight);
         locText.setText("Location: "+loc);
@@ -354,6 +354,7 @@ public class PackageView extends ActionBarActivity {
                                     }
 
                                     locText.setText("Location: " + place);
+                                    loc = place;
 
                                     update.setEnabled(true);
                                     deleteB.setEnabled(true);
@@ -363,7 +364,7 @@ public class PackageView extends ActionBarActivity {
                             });
                             dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-
+                                    updateSpinner.setSelection(0);
                                 }
                             });
 
